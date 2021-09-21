@@ -1,19 +1,37 @@
-<h2>Por País</h2>
+<div class="animate__animated animate__fadeIn animate__faster">
+  <h2>Por País</h2>
 <hr>
 
 <div class="row">
   <div class="col">
-    <form (ngSubmit)="buscar()" autocomplete="off">
-      <input type="text"
-             class="form-control"
-             name="query"
-             [(ngModel)]="query"
-             placeholder="Bucar país....">
-    </form>
+    <app-pais-input
+    (onEnter)="buscar($event)"
+    (onDebounce)="sugerencias($event)"
+    placeholder="Buscar País...">
+    </app-pais-input>
   </div>
 </div>
 
+<ul *ngIf="mostrarSugerencias"
+class="list-group">
+  <li *ngFor="let pais of paisesSugeridos" class="list-group-item list-group-item-action">
+    <a class="nav-link"
+       [routerLink]="['/pais', pais.alpha2Code]">
+        {{pais.name}}
+    </a>
+  </li>
+  <li class="list-group-item list-group-item-action"
+  (click)="buscarSugerido(query)">
+    <a class="nav-link">
+        Buscar "{{query}}"
+    </a>
+  </li>
+
+</ul>
+
+
 <hr>
+</div>
 
 <div *ngIf="hayError"
   class="alert alert-danger">
@@ -24,28 +42,7 @@
 
   <div class="col">
 
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th> # </th>
-          <th> Bandera </th>
-          <th> Nombre </th>
-          <th> Población </th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody *ngFor="let country of countries; let i = index">
-        <tr>
-          <td>{{i + 1}}</td>
-          <td>
-            <img class="small-flag" [src]="country.flag" [alt]="country.name">
-          </td>
-          <td>{{country.name}}</td>
-          <td>{{country.population | number}}</td>
-          <td><a [routerLink]="['/pais', country.alpha2Code]" >Ver...</a></td>
-        </tr>
-      </tbody>
-    </table>
+  <app-pais-tabla [countries]="countries"></app-pais-tabla>
 
   </div>
 
